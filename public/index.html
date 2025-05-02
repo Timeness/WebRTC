@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Room Video Chat</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    video { width: 45%; margin: 1%; border-radius: 10px; }
+    #videos { display: flex; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div id="videos">
+    <video id="localVideo" autoplay muted></video>
+    <video id="remoteVideo" autoplay></video>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
