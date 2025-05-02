@@ -1,43 +1,41 @@
 const express = require('express');
-const WebSocket = require('ws');
 const http = require('http');
+const { Server } = require('socket.io');
 const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-
-const rooms = {};
-
-wss.on('connection', ws => {
-  ws.on('message', message => {
-    const data = JSON.parse(message);
-    if (data.join) {
-      const room = data.join;
-      rooms[room] = rooms[room] || [];
-      rooms[room].push(ws);
-      ws.room = room;
-    }
-    if (ws.room) {
-      rooms[ws.room].forEach(client => {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(data));
-        }
-      });
-    }
-  });
-
-  ws.on('close', () => {
-    if (ws.room && rooms[ws.room]) {
-      rooms[ws.room] = rooms[ws.room].filter(client => client !== ws);
-    }
-  });
-});
+const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/room/:id', (req, res) => {
+app.get('/room/:room', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-server.listen(3000, () => console.log('Server running on http://localhost:3000'));
+io.on('connection', socket => {
+  socket.on('join', room => {
+    socket.join(room);
+    socket.to(room).emit('user-connected', socket.id);
+
+    socket.on('offer', data => {
+      socket.to(room).emit('offer', data);
+    });
+
+    socket.on('answer', data => {
+      socket.to(room).emit('answer', data);
+    });
+
+    socket.on('candidate', data => {
+      socket.to(room).emit('candidate', data);
+    });
+
+    socket.on('disconnect', () => {
+      socket.to(room).emit('user-disconnected', socket.id);
+    });
+  });
+});
+
+server.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+});
