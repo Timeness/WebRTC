@@ -1,6 +1,7 @@
 const express = require('express');
 const WebSocket = require('ws');
 const http = require('http');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -11,14 +12,12 @@ const rooms = {};
 wss.on('connection', ws => {
   ws.on('message', message => {
     const data = JSON.parse(message);
-
     if (data.join) {
       const room = data.join;
       rooms[room] = rooms[room] || [];
       rooms[room].push(ws);
       ws.room = room;
     }
-
     if (ws.room) {
       rooms[ws.room].forEach(client => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -35,10 +34,10 @@ wss.on('connection', ws => {
   });
 });
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/room/:id', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 server.listen(3000, () => console.log('Server running on http://localhost:3000'));
