@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Call</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WebRTC Video Chat</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="header">
-    <span>Room ID: <strong id="roomId"></strong></span>
-    <button id="endCallBtn"><iconify-icon icon="mdi:phone-hangup" style="color: white;"></iconify-icon></button>
-  </div>
-  <div id="videos">
+  <div id="video-chat-container">
     <video id="localVideo" autoplay muted playsinline></video>
     <video id="remoteVideo" autoplay playsinline></video>
+    <button id="endCallBtn">End Call</button>
   </div>
+  <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
