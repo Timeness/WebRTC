@@ -1,7 +1,7 @@
 {
   "name": "webrtc-video-chat",
   "version": "1.0.0",
-  "description": "P2P WebRTC video chat app with URL-based rooms",
+  "description": "8K P2P WebRTC video chat with room support",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
